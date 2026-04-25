@@ -1,8 +1,9 @@
 
-import API_CONFIG from '../config/api';
+import { getApiConfig } from '../config/api';
 
 class ApiService {
   async uploadResume(file) {
+    const API_CONFIG = getApiConfig();
     if (API_CONFIG.mode === 'mock') {
       return this.mockUploadResume(file);
     } else {
@@ -11,6 +12,7 @@ class ApiService {
   }
 
   async analyzeResume(data) {
+    const API_CONFIG = getApiConfig();
     if (API_CONFIG.mode === 'mock') {
       return this.mockAnalyzeResume(data);
     } else {
@@ -19,6 +21,7 @@ class ApiService {
   }
 
   async createSession(data) {
+    const API_CONFIG = getApiConfig();
     if (API_CONFIG.mode === 'mock') {
       return this.mockCreateSession(data);
     } else {
@@ -27,6 +30,7 @@ class ApiService {
   }
 
   async getSession(id) {
+    const API_CONFIG = getApiConfig();
     if (API_CONFIG.mode === 'mock') {
       return this.mockGetSession(id);
     } else {
@@ -103,6 +107,7 @@ class ApiService {
 
   // Real API implementations
   async realUploadResume(file) {
+    const API_CONFIG = getApiConfig();
     const formData = new FormData();
     formData.append('resume', file);
     
@@ -115,6 +120,7 @@ class ApiService {
   }
 
   async realAnalyzeResume(data) {
+    const API_CONFIG = getApiConfig();
     const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.resumeAnalyze}`, {
       method: 'POST',
       headers: {
@@ -127,6 +133,7 @@ class ApiService {
   }
 
   async realCreateSession(data) {
+    const API_CONFIG = getApiConfig();
     const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.sessions}`, {
       method: 'POST',
       headers: {
@@ -139,6 +146,7 @@ class ApiService {
   }
 
   async realGetSession(id) {
+    const API_CONFIG = getApiConfig();
     const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.sessionById(id)}`);
     return response.json();
   }

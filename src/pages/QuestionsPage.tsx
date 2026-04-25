@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import { useAppStore } from '../store';
@@ -11,9 +11,14 @@ export function QuestionsPage() {
   const navigate = useNavigate();
   const { session, submitAnswer, analyzeSessionResults } = useAppStore();
   
-  if (!session || session.id !== sessionId) {
-    navigate('/');
-    return null;
+  useEffect(() => {
+    if (!session || session.id !== sessionId) {
+      navigate('/');
+    }
+  }, [session, sessionId, navigate]);
+  
+  if (!session) {
+    return <div className="min-h-screen flex items-center justify-center">加载中...</div>;
   }
   
   const answeredCount = Object.keys(session.answers).length;

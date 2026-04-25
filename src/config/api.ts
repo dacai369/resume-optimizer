@@ -16,18 +16,26 @@ const getUserConfig = () => {
   }
 };
 
-const userConfig = getUserConfig();
-
-export const API_CONFIG = {
-  mode: userConfig.mode,
-  baseUrl: userConfig.baseUrl,
-  endpoints: {
-    resumeUpload: '/api/resume/upload',
-    resumeAnalyze: '/api/resume/analyze',
-    sessions: '/api/sessions',
-    sessionById: (id) => `/api/sessions/${id}`
-  }
+// 定义endpoints
+const endpoints = {
+  resumeUpload: '/api/resume/upload',
+  resumeAnalyze: '/api/resume/analyze',
+  sessions: '/api/sessions',
+  sessionById: (id) => `/api/sessions/${id}`
 };
+
+// 导出getApiConfig函数，每次调用时读取最新配置
+export const getApiConfig = () => {
+  const userConfig = getUserConfig();
+  return {
+    mode: userConfig.mode,
+    baseUrl: userConfig.baseUrl,
+    endpoints
+  };
+};
+
+// 保持API_CONFIG导出以向后兼容
+export const API_CONFIG = getApiConfig();
 
 export default API_CONFIG;
 

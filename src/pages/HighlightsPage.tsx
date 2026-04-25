@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, RefreshCcw, Copy } from 'lucide-react';
 import { useAppStore } from '../store';
@@ -11,9 +11,14 @@ export function HighlightsPage() {
   const { session, resetSession } = useAppStore();
   const [allCopied, setAllCopied] = useState(false);
   
-  if (!session || session.id !== sessionId || !session.highlights) {
-    navigate('/');
-    return null;
+  useEffect(() => {
+    if (!session || session.id !== sessionId || !session.highlights) {
+      navigate('/');
+    }
+  }, [session, sessionId, navigate]);
+  
+  if (!session || !session.highlights) {
+    return <div className="min-h-screen flex items-center justify-center">加载中...</div>;
   }
   
   const handleRestart = () => {

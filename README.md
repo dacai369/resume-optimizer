@@ -1,73 +1,119 @@
-# React + TypeScript + Vite
+# 简历优化 - JD智能分析与亮点提取
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一个将招聘JD转化为可体验的岗位模拟平台，帮助学生证明自己适合什么岗位，并自动提取简历亮点。
 
-Currently, two official plugins are available:
+## 功能特性
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 📋 **JD输入与解析**：支持粘贴招聘JD或使用示例JD
+- 🧠 **智能题目生成**：根据JD内容自动生成35道选择题
+- 📊 **能力分析**：详细的能力维度评估报告
+- ✨ **简历亮点提取**：根据答题结果自动提取简历亮点
+- 🔧 **API自定义**：支持mock和real两种模式，可灵活配置
 
-## React Compiler
+## 技术栈
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **前端框架**：React + TypeScript + Vite
+- **样式**：Tailwind CSS
+- **状态管理**：Zustand
+- **路由**：React Router DOM
+- **图标**：Lucide React
 
-## Expanding the ESLint configuration
+## 快速开始
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 安装依赖
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 启动开发服务器
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+### 构建生产版本
+
+```bash
+npm run build
+```
+
+### 预览生产版本
+
+```bash
+npm run preview
+```
+
+### 部署到GitHub Pages
+
+```bash
+npm run deploy:build
+```
+
+## 使用说明
+
+### 1. 输入JD
+- 在首页粘贴招聘JD或使用示例JD
+- 点击"开始答题"按钮
+
+### 2. 完成答题
+- 回答35道选择题
+- 系统会自动保存答案
+
+### 3. 查看分析
+- 答题完成后，查看详细的能力分析报告
+
+### 4. 提取亮点
+- 系统会根据分析结果提取简历亮点
+- 可以直接复制使用
+
+## API配置
+
+### 环境变量
+
+创建 `.env` 文件并配置以下变量：
+
+```env
+# API模式：'mock' 或 'real'
+VITE_API_MODE=mock
+
+# 真实API基础URL（仅在VITE_API_MODE=real时需要）
+VITE_API_BASE_URL=https://your-api-server.com
+```
+
+### 在应用中配置
+
+- 打开应用首页
+- 点击"API配置"按钮
+- 选择API模式
+- 输入API基础URL（真实模式时）
+- 点击"保存配置"
+
+## 项目结构
+
+```
+简历优化/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── config/
+│   ├── pages/
+│   ├── services/
+│   ├── store/
+│   ├── types/
+│   └── utils/
+├── .env.example
+├── .gitignore
+├── package.json
+├── tailwind.config.ts
+└── vite.config.ts
+```
+
+## 许可证
+
+MIT
+
+## 贡献
+
+欢迎提交Issue和Pull Request！

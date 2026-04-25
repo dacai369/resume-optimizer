@@ -1,6 +1,6 @@
-
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { apiService } from '../services/api';
 import { parseJd } from '../utils/jdParser';
 import { generateQuestions } from '../utils/questionGenerator';
 import { analyzeResults } from '../utils/analyzer';
@@ -11,16 +11,43 @@ const useAppStore = create(
     (set, get) => ({
       session: null,
       
-      createSession: (jdText) => {
-        const session = {
-          id: Date.now().toString(),
-          jdText,
-          questions: [],
-          answers: {},
-          status: 'idle'
-        };
-        set({ session });
-        return session;
+      createSession: async (jdText) => {
+        try {
+          const response = await apiService.createSession({ jdText });
+          if (response.success) {
+            const session = {
+              id: response.data.id,
+              jdText,
+              questions: [],
+              answers: {},
+              status: 'idle'
+            };
+            set({ session });
+            return session;
+          } else {
+            // 回退到本地实现
+            const session = {
+              id: Date.now().toString(),
+              jdText,
+              questions: [],
+              answers: {},
+              status: 'idle'
+            };
+            set({ session });
+            return session;
+          }
+        } catch (error) {
+          // 回退到本地实现
+          const session = {
+            id: Date.now().toString(),
+            jdText,
+            questions: [],
+            answers: {},
+            status: 'idle'
+          };
+          set({ session });
+          return session;
+        }
       },
       
       parseJd: async (sessionId) => {
@@ -28,16 +55,39 @@ const useAppStore = create(
         if (state.session && state.session.id === sessionId) {
           set({ session: { ...state.session, status: 'parsing' } });
           
-          await new Promise(resolve => setTimeout(resolve, 1500));
-          
-          const parsedJd = parseJd(state.session.jdText);
-          set({ 
-            session: { 
-              ...state.session, 
-              parsedJd, 
-              status: 'idle' 
-            } 
-          });
+          try {
+            const response = await apiService.analyzeResume({ jdText: state.session.jdText });
+            if (response.success) {
+              const parsedJd = parseJd(state.session.jdText);
+              set({ 
+                session: { 
+                  ...state.session, 
+                  parsedJd, 
+                  status: 'idle' 
+                } 
+              });
+            } else {
+              // 回退到本地实现
+              const parsedJd = parseJd(state.session.jdText);
+              set({ 
+                session: { 
+                  ...state.session, 
+                  parsedJd, 
+                  status: 'idle' 
+                } 
+              });
+            }
+          } catch (error) {
+            // 回退到本地实现
+            const parsedJd = parseJd(state.session.jdText);
+            set({ 
+              session: { 
+                ...state.session, 
+                parsedJd, 
+                status: 'idle' 
+              } 
+            });
+          }
         }
       },
       
@@ -46,16 +96,29 @@ const useAppStore = create(
         if (state.session && state.session.id === sessionId) {
           set({ session: { ...state.session, status: 'generating' } });
           
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          
-          const questions = generateQuestions();
-          set({ 
-            session: { 
-              ...state.session, 
-              questions, 
-              status: 'answering' 
-            } 
-          });
+          try {
+            // 暂时使用本地实现，因为没有对应的API
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            const questions = generateQuestions();
+            set({ 
+              session: { 
+                ...state.session, 
+                questions, 
+                status: 'answering' 
+              } 
+            });
+          } catch (error) {
+            // 回退到本地实现
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            const questions = generateQuestions();
+            set({ 
+              session: { 
+                ...state.session, 
+                questions, 
+                status: 'answering' 
+              } 
+            });
+          }
         }
       },
       
@@ -79,32 +142,58 @@ const useAppStore = create(
         if (state.session && state.session.id === sessionId) {
           set({ session: { ...state.session, status: 'analyzing' } });
           
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          
-          const analysis = analyzeResults(state.session.questions, state.session.answers);
-          set({ 
-            session: { 
-              ...state.session, 
-              analysis, 
-              status: 'idle' 
-            } 
-          });
+          try {
+            // 暂时使用本地实现，因为没有对应的API
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            const analysis = analyzeResults(state.session.questions, state.session.answers);
+            set({ 
+              session: { 
+                ...state.session, 
+                analysis, 
+                status: 'idle' 
+              } 
+            });
+          } catch (error) {
+            // 回退到本地实现
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            const analysis = analyzeResults(state.session.questions, state.session.answers);
+            set({ 
+              session: { 
+                ...state.session, 
+                analysis, 
+                status: 'idle' 
+              } 
+            });
+          }
         }
       },
       
       generateSessionHighlights: async (sessionId) => {
         const state = get();
         if (state.session && state.session.id === sessionId && state.session.analysis && state.session.parsedJd) {
-          await new Promise(resolve => setTimeout(resolve, 1500));
-          
-          const highlights = generateHighlights(state.session.analysis, state.session.parsedJd);
-          set({ 
-            session: { 
-              ...state.session, 
-              highlights, 
-              status: 'complete' 
-            } 
-          });
+          try {
+            // 暂时使用本地实现，因为没有对应的API
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            const highlights = generateHighlights(state.session.analysis, state.session.parsedJd);
+            set({ 
+              session: { 
+                ...state.session, 
+                highlights, 
+                status: 'complete' 
+              } 
+            });
+          } catch (error) {
+            // 回退到本地实现
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            const highlights = generateHighlights(state.session.analysis, state.session.parsedJd);
+            set({ 
+              session: { 
+                ...state.session, 
+                highlights, 
+                status: 'complete' 
+              } 
+            });
+          }
         }
       },
       
@@ -113,10 +202,32 @@ const useAppStore = create(
       }
     }),
     {
-      name: 'resume-session-storage'
+      name: 'resume-session-storage',
+      version: 1,
+      migrate: (persistedState, version) => {
+        if (version === 0) {
+          // 迁移逻辑，如果需要的话
+          return persistedState;
+        }
+        return persistedState;
+      },
+      partialize: (state) => {
+        // 只持久化必要的字段
+        return {
+          session: state.session ? {
+            id: state.session.id,
+            jdText: state.session.jdText,
+            questions: state.session.questions,
+            answers: state.session.answers,
+            parsedJd: state.session.parsedJd,
+            analysis: state.session.analysis,
+            highlights: state.session.highlights,
+            status: state.session.status
+          } : null
+        };
+      }
     }
   )
 );
 
 export { useAppStore };
-
