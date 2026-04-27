@@ -53,7 +53,8 @@ class ApiService {
     });
   }
 
-  async mockAnalyzeResume() {
+  async mockAnalyzeResume(data) {
+    void data;
     return new Promise(resolve => {
       setTimeout(() => {
         resolve({

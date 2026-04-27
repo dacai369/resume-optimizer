@@ -47,7 +47,7 @@ export function HighlightsPage() {
     return <div className="min-h-screen flex items-center justify-center">加载中...</div>;
   }
 
-  const completedSession: CompletedSession = session;
+  const completedSession = session as CompletedSession;
 
   const handleRestart = () => {
     resetSession();
