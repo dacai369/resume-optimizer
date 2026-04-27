@@ -7,7 +7,7 @@ import { HighlightsPage } from './pages/HighlightsPage';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/resume-optimizer">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/questions/:sessionId" element={<QuestionsPage />} />
