@@ -1,8 +1,11 @@
 
-import React from 'react';
+interface ProgressIndicatorProps {
+  current: number;
+  total: number;
+  label?: string;
+}
 
-export function ProgressIndicator(props) {
-  const { current, total, label } = props;
+export function ProgressIndicator({ current, total, label }: ProgressIndicatorProps) {
   const percentage = Math.round((current / total) * 100);
   
   return (
@@ -22,4 +25,3 @@ export function ProgressIndicator(props) {
     </div>
   );
 }
-

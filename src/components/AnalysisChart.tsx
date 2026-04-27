@@ -1,8 +1,11 @@
 
-import React from 'react';
+import type { DimensionScore } from '../types';
 
-export function AnalysisChart(props) {
-  const { dimensions } = props;
+interface AnalysisChartProps {
+  dimensions: DimensionScore[];
+}
+
+export function AnalysisChart({ dimensions }: AnalysisChartProps) {
   
   return (
     <div className="space-y-4">
@@ -28,4 +31,3 @@ export function AnalysisChart(props) {
     </div>
   );
 }
-

@@ -1,4 +1,4 @@
-import { AnalysisResult, ParsedJd, ResumeHighlights } from '../types';
+import type { AnalysisResult, ParsedJd, ResumeHighlights } from '../types';
 
 function getScoreLabel(ratio: number): string {
   if (ratio >= 0.90) return '优秀';

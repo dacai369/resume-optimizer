@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Copy } from 'lucide-react';
+import type { ResumeHighlight } from '../types';
 
 const categoryColors = {
   'skills': 'from-blue-500 to-blue-600',
@@ -16,8 +17,11 @@ const categoryIcons = {
   'achievements': '🏆'
 };
 
-export function HighlightCard(props) {
-  const { highlight, index } = props;
+interface HighlightCardProps {
+  highlight: ResumeHighlight;
+}
+
+export function HighlightCard({ highlight }: HighlightCardProps) {
   const [copied, setCopied] = useState(false);
   
   const handleCopy = () => {
@@ -65,4 +69,3 @@ export function HighlightCard(props) {
     </div>
   );
 }
-

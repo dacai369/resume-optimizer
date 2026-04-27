@@ -1,28 +1,52 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { AnalysisResult, ParsedJd, ResumeHighlights, Session, Question } from '../types';
 import { parseJd } from '../utils/jdParser';
 import { generateQuestions } from '../utils/questionGenerator';
 import { analyzeResults } from '../utils/analyzer';
 import { generateHighlights } from '../utils/highlightGenerator';
 
-const useAppStore = create(
+interface AppStore {
+  session: Session | null;
+  createSession: (jdText: string) => Session;
+  parseJd: (sessionId: string) => Promise<void>;
+  generateQuestions: (sessionId: string) => Promise<void>;
+  submitAnswer: (sessionId: string, questionId: string, optionId: string) => void;
+  analyzeSessionResults: (sessionId: string) => Promise<void>;
+  generateSessionHighlights: (sessionId: string) => Promise<void>;
+  resetSession: () => void;
+}
+
+interface PersistedState {
+  session: Session | null;
+}
+
+type SessionDraft = Omit<Session, 'parsedJd' | 'analysis' | 'highlights'> & {
+  parsedJd?: ParsedJd;
+  analysis?: AnalysisResult;
+  highlights?: ResumeHighlights;
+};
+
+const createBaseSession = (jdText: string): SessionDraft => ({
+  id: Date.now().toString(),
+  jdText,
+  questions: [] as Question[],
+  answers: {},
+  status: 'idle',
+});
+
+const useAppStore = create<AppStore>()(
   persist(
     (set, get) => ({
       session: null,
 
-      createSession: (jdText) => {
-        const session = {
-          id: Date.now().toString(),
-          jdText,
-          questions: [],
-          answers: {},
-          status: 'idle',
-        };
+      createSession: (jdText: string) => {
+        const session = createBaseSession(jdText);
         set({ session });
         return session;
       },
 
-      parseJd: async (sessionId) => {
+      parseJd: async (sessionId: string) => {
         const state = get();
         if (!state.session || state.session.id !== sessionId) return;
         set({ session: { ...state.session, status: 'parsing' } });
@@ -31,7 +55,7 @@ const useAppStore = create(
         set({ session: { ...get().session, parsedJd, status: 'idle' } });
       },
 
-      generateQuestions: async (sessionId) => {
+      generateQuestions: async (sessionId: string) => {
         const state = get();
         if (!state.session || state.session.id !== sessionId) return;
         set({ session: { ...state.session, status: 'generating' } });
@@ -40,7 +64,7 @@ const useAppStore = create(
         set({ session: { ...get().session, questions, status: 'answering' } });
       },
 
-      submitAnswer: (sessionId, questionId, optionId) => {
+      submitAnswer: (sessionId: string, questionId: string, optionId: string) => {
         const state = get();
         if (!state.session || state.session.id !== sessionId) return;
         set({
@@ -51,7 +75,7 @@ const useAppStore = create(
         });
       },
 
-      analyzeSessionResults: async (sessionId) => {
+      analyzeSessionResults: async (sessionId: string) => {
         const state = get();
         if (!state.session || state.session.id !== sessionId) return;
         set({ session: { ...state.session, status: 'analyzing' } });
@@ -64,7 +88,7 @@ const useAppStore = create(
         set({ session: { ...get().session, analysis, status: 'idle' } });
       },
 
-      generateSessionHighlights: async (sessionId) => {
+      generateSessionHighlights: async (sessionId: string) => {
         const state = get();
         if (!state.session || state.session.id !== sessionId || !state.session.analysis || !state.session.parsedJd) return;
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -77,8 +101,8 @@ const useAppStore = create(
     {
       name: 'resume-session-storage',
       version: 2,
-      migrate: () => ({ session: null }),
-      partialize: (state) => ({
+      migrate: (): PersistedState => ({ session: null }),
+      partialize: (state): PersistedState => ({
         session: state.session
           ? {
               id: state.session.id,

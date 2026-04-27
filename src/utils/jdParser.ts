@@ -1,4 +1,4 @@
-import { ParsedJd } from '../types';
+import type { ParsedJd } from '../types';
 
 const TECH_SKILLS = [
   'React', 'Vue', 'Angular', 'TypeScript', 'JavaScript', 'Python', 'Java', 'Go', 'Rust',

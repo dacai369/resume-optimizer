@@ -1,4 +1,4 @@
-import { Question, AnalysisResult, ParsedJd } from '../types';
+import type { Question, AnalysisResult, ParsedJd } from '../types';
 
 const categoryDescriptions: Record<string, string> = {
   '团队协作': '在团队中的沟通与协作表现',

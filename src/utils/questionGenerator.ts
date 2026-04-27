@@ -1,4 +1,4 @@
-import { Question, ParsedJd } from '../types';
+import type { Question, ParsedJd } from '../types';
 
 const softSkillQuestions = [
   {

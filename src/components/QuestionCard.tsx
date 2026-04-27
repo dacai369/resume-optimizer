@@ -1,10 +1,16 @@
 
-import React from 'react';
+import type { Question } from '../types';
 
-export function QuestionCard(props) {
-  const { question, selectedOptionId, onSelect, index } = props;
+interface QuestionCardProps {
+  question: Question;
+  selectedOptionId?: string;
+  onSelect: (optionId: string) => void;
+  index: number;
+}
+
+export function QuestionCard({ question, selectedOptionId, onSelect, index }: QuestionCardProps) {
   
-  const getDifficultyColor = (difficulty) => {
+  const getDifficultyColor = (difficulty: Question['difficulty']) => {
     switch (difficulty) {
       case 'easy': return 'bg-green-100 text-green-700';
       case 'medium': return 'bg-yellow-100 text-yellow-700';
@@ -62,4 +68,3 @@ export function QuestionCard(props) {
     </div>
   );
 }
-

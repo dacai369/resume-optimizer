@@ -53,7 +53,7 @@ class ApiService {
     });
   }
 
-  async mockAnalyzeResume(data) {
+  async mockAnalyzeResume(_data) {
     return new Promise(resolve => {
       setTimeout(() => {
         resolve({
@@ -155,4 +155,3 @@ class ApiService {
 export const apiService = new ApiService();
 
 export default apiService;
-
