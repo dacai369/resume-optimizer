@@ -79,7 +79,7 @@ function extractSections(text: string): { requirements: string[]; responsibiliti
     if (isReqHeader) { currentSection = 'req'; continue; }
     if (isRespHeader) { currentSection = 'resp'; continue; }
 
-    const cleaned = line.replace(/^[\d\.\-\*\s]+/, '').trim();
+    const cleaned = line.replace(/^[\d.*\-\s]+/, '').trim();
     if (cleaned.length < 5) continue;
 
     if (currentSection === 'req' && reqSection.length < 8) reqSection.push(cleaned);

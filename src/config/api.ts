@@ -8,7 +8,7 @@ const getUserConfig = () => {
       mode: mode || import.meta.env.VITE_API_MODE || 'mock',
       baseUrl: baseUrl || import.meta.env.VITE_API_BASE_URL || ''
     };
-  } catch (error) {
+  } catch {
     return {
       mode: import.meta.env.VITE_API_MODE || 'mock',
       baseUrl: import.meta.env.VITE_API_BASE_URL || ''
@@ -38,4 +38,3 @@ export const getApiConfig = () => {
 export const API_CONFIG = getApiConfig();
 
 export default API_CONFIG;
-

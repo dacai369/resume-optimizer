@@ -3,8 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, RefreshCcw, Copy, Download, Briefcase } from 'lucide-react';
 import { useAppStore } from '../store';
 import { HighlightCard } from '../components/HighlightCard';
+import type { ResumeHighlight, ResumeHighlights, Session } from '../types';
 
-function buildMarkdown(session: any): string {
+type CompletedSession = Session & { highlights: ResumeHighlights };
+
+function buildMarkdown(session: CompletedSession): string {
   const lines: string[] = [];
   if (session.parsedJd) {
     lines.push(`# 简历亮点 - ${session.parsedJd.title}`);
@@ -16,7 +19,7 @@ function buildMarkdown(session: any): string {
   lines.push(`> ${session.highlights.summary}`);
   lines.push('');
 
-  session.highlights.highlights.forEach((h: any) => {
+  session.highlights.highlights.forEach((h: ResumeHighlight) => {
     lines.push(`## ${h.title}`);
     lines.push(h.description);
     lines.push('');
@@ -44,14 +47,16 @@ export function HighlightsPage() {
     return <div className="min-h-screen flex items-center justify-center">加载中...</div>;
   }
 
+  const completedSession: CompletedSession = session;
+
   const handleRestart = () => {
     resetSession();
     navigate('/');
   };
 
   const handleCopyAll = () => {
-    const text = session.highlights!.highlights
-      .map((h: any) => `【${h.title}】\n${h.description}\n关键词：${h.keywords.join('、')}`)
+    const text = completedSession.highlights.highlights
+      .map((h: ResumeHighlight) => `【${h.title}】\n${h.description}\n关键词：${h.keywords.join('、')}`)
       .join('\n\n');
     navigator.clipboard.writeText(text).then(() => {
       setAllCopied(true);
@@ -60,7 +65,7 @@ export function HighlightsPage() {
   };
 
   const handleCopyMarkdown = () => {
-    navigator.clipboard.writeText(buildMarkdown(session)).then(() => {
+    navigator.clipboard.writeText(buildMarkdown(completedSession)).then(() => {
       setMdCopied(true);
       setTimeout(() => setMdCopied(false), 2000);
     });
@@ -115,8 +120,8 @@ export function HighlightsPage() {
 
         {/* 亮点卡片 */}
         <div className="space-y-4 mb-8">
-          {session.highlights.highlights.map((highlight: any, index: number) => (
-            <HighlightCard key={index} highlight={highlight} index={index} />
+          {completedSession.highlights.highlights.map((highlight: ResumeHighlight, index: number) => (
+            <HighlightCard key={index} highlight={highlight} />
           ))}
         </div>
 
