@@ -18,6 +18,8 @@ export interface ParsedJd {
   requirements: string[];
   responsibilities: string[];
   skills: string[];
+  education?: string;
+  experience?: string;
   description: string;
 }
 
